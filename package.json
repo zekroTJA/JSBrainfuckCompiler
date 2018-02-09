@@ -1,0 +1,11 @@
+{
+  "name": "brainfuckinterpreter",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "author": "zekro Development <contact@zekro.de>",
+  "license": "MIT"
+}
