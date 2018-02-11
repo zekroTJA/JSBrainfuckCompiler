@@ -3,6 +3,7 @@ class BrainFuck {
 
     constructor(options) {
         this.cell_size =   options && options.cell_size ? options.cell_size : 8
+        this.loopbreak =   options && options.loopbreak ? options.loopbreak : 1e9
     }
 
     increment() {
@@ -64,18 +65,27 @@ class BrainFuck {
             case ',':
                 this.input()
                 break
-            case '[':
-
-                break
-            case ']':
-
-                break
         }
     }
 
     setInput(input) {
         this.inp_str = input
         return this
+    }
+
+    fancyMemOut() {
+        let out = ''
+        let _pad = (str, len) => {
+            while (str.length < len)
+                str = '0' + str
+            return str
+        }
+        this.mem.forEach((v, i) => {
+            if (i % 12 == 0)
+                out += '\n' + _pad(i.toString(16), 4) + ': '
+            out += _pad(v.toString(16), this.cell_size / 4) + ' '
+        })
+        return out
     }
 
     compile(code, cb) {
@@ -98,8 +108,10 @@ class BrainFuck {
                     do {
                         this.parse_current(this.char)
                         this.char = code.charAt(++i)
-                        if (++stopper == 500)
-                            process.exit()
+                        if (stopper++ > this.loopbreak) {
+                            cb(this.out, this.mem, this.pointer)
+                            return
+                        }
                     }
                     while (this.char != ']')
                     i = start
